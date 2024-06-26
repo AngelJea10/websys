@@ -21,6 +21,7 @@ import Button from '@mui/material/Button';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import LocalDoctorsTable from './LocalDoctorsTable';
 import supabase from '../Services/Supabase';
+import Copyright from '../Components/Copyright';
 
 const drawerWidth = 290;
 
@@ -188,15 +189,15 @@ export default function LocalDoctorsPage() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Button variant="contained" color="primary" onClick={() => setOpenDialog(true)}>
-                  Add Doctor
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
                 <Typography variant="h4" component="h3" gutterBottom>
                   Local Doctors List
                 </Typography>
                 <LocalDoctorsTable reload={reload} />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={() => setOpenDialog(true)}>
+                  Add Doctor
+                </Button>
               </Grid>
             </Grid>
           </Container>
@@ -249,6 +250,7 @@ export default function LocalDoctorsPage() {
               </Button>
             </DialogActions>
           </Dialog>
+          <Copyright />
         </Box>
       </Box>
     </ThemeProvider>

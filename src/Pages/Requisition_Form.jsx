@@ -19,6 +19,7 @@ import { mainListItems } from '../Components/NavList';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@mui/material';
 import supabase from '../Services/Supabase';
 import '../requisition_form.css';
+import { Copyright } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -401,6 +402,7 @@ const Requisition_Form = ({ pharmaceuticalSupplies, setPharmaceuticalSupplies, s
               </Grid>
             </Grid>
           </Container>
+          <Copyright />
         </Box>
       </Box>
     </ThemeProvider>

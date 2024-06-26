@@ -18,13 +18,13 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { mainListItems } from '../Components/NavList';
 import { useNavigate } from 'react-router-dom';
 
-// imglist components
+
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import InfoIcon from '@mui/icons-material/Info';
 
-// local images
+
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
 import img3 from '../assets/3.jpg';
@@ -32,7 +32,7 @@ import img4 from '../assets/4.jpg';
 import img5 from '../assets/5.jpg';
 import img6 from '../assets/6.jpg';
 
-// for mui chart
+
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Chance } from 'chance';
 import {
@@ -40,7 +40,7 @@ import {
 } from '@mui/x-charts/colorPalettes';
 import Stack from '@mui/material/Stack';
 
-// card component
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -92,15 +92,15 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 );
 
-// Create a custom theme with the primary color set to purple
+
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#800080', // Purple color
+      main: '#800080', 
     },
   },
   typography: {
-    // Define the outfit font style
+  
     fontFamily: ['"Outfit"', 'sans-serif'].join(','),
   },
 });

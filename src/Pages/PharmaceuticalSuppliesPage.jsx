@@ -156,7 +156,7 @@ const PharmaceuticalSuppliesPage = () => {
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
           <TextField
             type="text"
-            placeholder="Supplier Number"
+            placeholder="Supplier ID"
             name="supplier_num"
             value={pharmaceuticalSupply.supplier_num}
             onChange={handleChange}

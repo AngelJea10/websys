@@ -42,6 +42,7 @@ export const mainListItems = (
         <ListItemText primary="Dashboard" />
       </ListItemButton>
     </Link>
+
     <Link to="/dashboard/book-appointment" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
@@ -50,46 +51,7 @@ export const mainListItems = (
         <ListItemText primary="Book Appointment" />
       </ListItemButton>
     </Link>
-    <Link to="/dashboard/create_staff" style={styles}>
-      <ListItemButton sx={listItemButtonStyles}>
-        <ListItemIcon>
-          <GroupAddIcon />
-        </ListItemIcon>
-        <ListItemText primary="Create Staff" />
-      </ListItemButton>
-    </Link>
-    <Link to="/dashboard/patients" style={styles}>
-      <ListItemButton sx={listItemButtonStyles}>
-        <ListItemIcon>
-          <AccessibleForwardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Patients" />
-      </ListItemButton>
-    </Link>
-    <Link to="/dashboard/patient-alloc" style={styles}>
-      <ListItemButton sx={listItemButtonStyles}>
-        <ListItemIcon>
-          <HotelIcon />
-        </ListItemIcon>
-        <ListItemText primary="Patient Allocation" />
-      </ListItemButton>
-    </Link>
-    <Link to="/dashboard/medication-list" style={styles}>
-      <ListItemButton sx={listItemButtonStyles}>
-        <ListItemIcon>
-          <MedicalInformationIcon />
-        </ListItemIcon>
-        <ListItemText primary="Patient Medication List" />
-      </ListItemButton>
-    </Link>
-    <Link to="/dashboard/local-doctors" style={styles}>
-      <ListItemButton sx={listItemButtonStyles}>
-        <ListItemIcon>
-          <NoteAddIcon />
-        </ListItemIcon>
-        <ListItemText primary="Local Doctors" />
-      </ListItemButton>
-    </Link>
+
     <Link to="/list-patient-appointment" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
@@ -98,38 +60,43 @@ export const mainListItems = (
         <ListItemText primary="List Of Patient Appointment" />
       </ListItemButton>
     </Link>
-    <Link to="/requiform" style={styles}>
+
+    <Link to="/dashboard/patients" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
-          <DynamicFormIcon />
+          <AccessibleForwardIcon />
         </ListItemIcon>
-        <ListItemText primary="Requisition Form" />
+        <ListItemText primary="Patients" />
       </ListItemButton>
     </Link>
-    <Link to="/dashboard/staff-alloc" style={styles}>
+
+    <Link to="/dashboard/medication-list" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
-          <MedicationIcon />
+          <MedicalInformationIcon />
         </ListItemIcon>
-        <ListItemText primary="Staff Allocation List" />
+        <ListItemText primary="Patient Medication List" />
       </ListItemButton>
     </Link>
-    <Link to="/dashboard/stafflist" style={styles}>
+
+    <Link to="/dashboard/local-doctors" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
-          <AssignmentIndIcon />
+          <NoteAddIcon />
         </ListItemIcon>
-        <ListItemText primary="Staff Lists" />
+        <ListItemText primary="Local Doctors" />
       </ListItemButton>
     </Link>
-    <Link to="/dashboard/suppliers" style={styles}>
+
+    <Link to="/dashboard/staff" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
-          <Inventory2Icon />
+          <GroupAddIcon />
         </ListItemIcon>
-        <ListItemText primary="Suppliers" />
+        <ListItemText primary="Staff" />
       </ListItemButton>
     </Link>
+  
     <Link to="/dashboard/wards" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
@@ -138,6 +105,7 @@ export const mainListItems = (
         <ListItemText primary="Wards" />
       </ListItemButton>
     </Link>
+
     <Link to="/dashboard/wardstaffalloc" style={styles}>
       <ListItemButton sx={listItemButtonStyles}>
         <ListItemIcon>
@@ -146,5 +114,24 @@ export const mainListItems = (
         <ListItemText primary="Ward Staff Allocation" />
       </ListItemButton>
     </Link>
-  </React.Fragment>
+
+    <Link to="/requiform" style={styles}>
+      <ListItemButton sx={listItemButtonStyles}>
+        <ListItemIcon>
+          <DynamicFormIcon />
+        </ListItemIcon>
+        <ListItemText primary="Requisition Form" />
+      </ListItemButton>
+    </Link>
+
+    <Link to="/dashboard/suppliers" style={styles}>
+      <ListItemButton sx={listItemButtonStyles}>
+        <ListItemIcon>
+          <Inventory2Icon />
+        </ListItemIcon>
+        <ListItemText primary="Suppliers" />
+      </ListItemButton>
+    </Link>
+    </React.Fragment>
 );
+    

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import supabase from '../Services/Supabase';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,6 +21,9 @@ import Copyright from '../Components/Copyright';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
+import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
+import { Gif, GridOff } from "@mui/icons-material";
 
 const drawerWidth = 290;
 
@@ -71,7 +74,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#800080', 
+      main: '#800080',
     },
   },
   typography: {
@@ -79,7 +82,7 @@ const customTheme = createTheme({
   },
 });
 
-export default function Create_Staff() {
+export default function StaffPage() {
   const [open, setOpen] = useState(false);
   const [staff, setStaff] = useState({
     f_name: '',
@@ -94,37 +97,117 @@ export default function Create_Staff() {
     position: ''
   });
   const [error, setError] = useState(null);
+  const [staffList, setStaffList] = useState([]);
+  const [formData, setFormData] = useState({
+    staffNum: '',
+    wardId: '',
+    shift: '',
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchStaff();
+  }, []);
+
+  async function fetchStaff() {
+    try {
+      const { data, error } = await supabase
+        .from('staff')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching staff:', error.message);
+        return;
+      }
+
+      setStaffList(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching staff:', error.message);
+    }
+  }
 
   function handleChange(event) {
+    const { name, value } = event.target;
     setStaff(prevFormData => ({
       ...prevFormData,
-      [event.target.name]: event.target.value
+      [event.target.name]: value
+    }));
+  }
+
+  function handleFormChange(event) {
+    const { name, value } = event.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
     }));
   }
 
   async function addStaff(event) {
     event.preventDefault();
     setError(null);
-
+  
     if (!staff.f_name || !staff.l_name || !staff.tel_number || !staff.position) {
       setError("Please fill in all required fields.");
       return;
     }
-
+  
     const { data, error } = await supabase
       .from('staff')
       .insert(staff);
-
+  
     if (error) {
       console.error("Error inserting data:", error);
       setError("Failed to save staff details. Please try again.");
     } else {
       console.log("Staff added:", data);
+      fetchStaff();
+      // Reset form fields after successful submission
+      setStaff({
+        f_name: '',
+        l_name: '',
+        address: '',
+        tel_number: '',
+        date_of_birth: '',
+        nin: '',
+        sex: '',
+        salary_scale: '',
+        salary: '',
+        position: ''
+      });
     }
   }
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleSeeStaffAllocationClick = () => {
+    navigate('/dashboard/staff-alloc');
+  };
+
+  const handleCreateStaffAllocation = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('staff_allocation')
+        .insert([{ 
+          staff_num: formData.staffNum,
+          ward_id: formData.wardId,
+          shift: formData.shift,
+        }]);
+
+      if (error) {
+        console.error('Error inserting staff allocation:', error.message);
+        window.alert(`Failed to create staff allocation: ${error.message}`);
+        return;
+      }
+
+      console.log('Inserted staff allocation data:', data);
+      window.alert('Staff allocation created successfully!');
+    } catch (error) {
+      console.error('Error creating staff allocation:', error.message);
+      window.alert('Failed to create staff allocation');
+    }
   };
 
   return (
@@ -244,7 +327,7 @@ export default function Create_Staff() {
                           onChange={handleChange}
                           value={staff.address}
                           fullWidth
-                          variant="outlined"
+                          variant="outlined"  
                           sx={{ marginBottom: 2 }}
                           InputProps={{
                             startAdornment: <InputAdornment position="start"></InputAdornment>,
@@ -398,6 +481,97 @@ export default function Create_Staff() {
                 </Paper>
               </Grid>
             </Grid>
+             
+            <Typography variant="h4" component="h2" gutterBottom sx={{ mt: 4 }}>
+              Staff List
+            </Typography>
+            <Grid container spacing={10}>
+              <Grid item xs={12}>
+                
+                <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column', border: '2px solid #800080', width: '110%' }}>
+                  <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ whiteSpace: 'nowrap' }}>ID</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>First Name</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Last Name</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Address</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Telephone Number</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Date of Birth</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>NIN</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Sex</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Salary Scale</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Salary</th>
+                        <th style={{ whiteSpace: 'nowrap' }}>Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {staffList.map((staffMember) => (
+                        <tr key={staffMember.staff_num}>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.staff_num}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.f_name}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.l_name}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.address}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.tel_number}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.date_of_birth}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.nin}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.sex}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.salary_scale}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.salary}</td>
+                          <td style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{staffMember.position}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Paper>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} >
+            <Box sx={{ display: 'flex', marginTop: 2, gap: 2 }}>
+              <TextField
+                label="Staff Number"
+                name="staffNum"
+                value={formData.staffNum}
+                onChange={handleFormChange}
+                variant="outlined"
+                sx={{ marginRight: 1, width: '18%' }}
+              />
+              <TextField
+                label="Ward ID"
+                name="wardId"
+                value={formData.wardId}
+                onChange={handleFormChange}
+                variant="outlined"
+                sx={{ marginRight: 1, width: '18%'  }}
+              />
+              <TextField
+                label="Shift"
+                name="shift"
+                value={formData.shift}
+                onChange={handleFormChange}
+                variant="outlined"
+                sx={{ marginRight: 1, width: '18%'  }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleCreateStaffAllocation}
+              >
+                Create Staff Allocation
+              </Button>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSeeStaffAllocationClick}
+                >
+                  See Staff Allocation
+                </Button>
+            </Box>
+
+            </Grid>
+            
+            
           </Container>
           <Copyright />
         </Box>

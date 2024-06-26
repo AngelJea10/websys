@@ -45,7 +45,7 @@ const SignUp = () => {
       if (error) throw error;
 
       alert("Sign up successful. You can now log in.");
-      navigate('/'); // Redirect to login page
+      navigate('/'); 
     } catch (error) {
       alert(error.message);
     }

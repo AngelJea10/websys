@@ -61,7 +61,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#800080', // Purple color
+      main: '#800080', 
     },
   },
   typography: {
@@ -76,7 +76,7 @@ const WardStaffAllocation = () => {
 
   async function fetchWardStaffAllocation() {
     try {
-      setWardStaffAllocation([]); // Clear previous results
+      setWardStaffAllocation([]); 
       const { data, error } = await supabase
         .rpc('fetch_staff_allocation', { ward_id_params: parseInt(searchTerm, 10) });
 
@@ -85,7 +85,7 @@ const WardStaffAllocation = () => {
         return;
       }
 
-      console.log('Data fetched:', data); // Debugging line
+      console.log('Data fetched:', data); 
       setWardStaffAllocation(data);
     } catch (error) {
       console.error('Error fetching staff allocation:', error.message);

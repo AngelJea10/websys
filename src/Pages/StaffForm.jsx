@@ -187,7 +187,7 @@ export default function StaffForm() {
                   <Typography variant="h4" component="h2" gutterBottom align="center" sx={{ flexGrow: 1 }}>
                     Staff Form
                   </Typography>
-                  <div style={{ width: 120 }}></div> {/* Spacer to balance the layout */}
+                  <div style={{ width: 120 }}></div> 
                 </Box>
                 <Box 
                   sx={{ 

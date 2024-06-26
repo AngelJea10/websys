@@ -9,14 +9,13 @@ import PatientMedicationList from '../Pages/PatientMedicationList';
 import RequisitionForm from '../Pages/Requisition_Form'; 
 import StaffList from '../Pages/StaffList';
 import Patient_Page from '../Pages/Patient_Page';
-import Create_Staff from '../Pages/Create_Staff';
+import Staff from '../Pages/Staff';
 import PatientRegistrationForm from '../Pages/PatientRegistrationForm';
 import Suppliers from '../Pages/Suppliers';
 import WardPage from '../Pages/WardPage'; 
 import Staff_Allocation from '../Pages/Staff_Allocation'; 
 import WardStaffAllocation from '../Pages/WardStaffAllocation';
 import Patients from '../Pages/Patients';
-import Patient_Allocation from '../Pages/Patient_Allocation';
 import ListOfPa from '../Pages/ListOfPa';
 
 const routes = [
@@ -30,7 +29,7 @@ const routes = [
   { path: "/dashboard/local-doctors", element: <LocalDoctorsPage /> },
   { path: "/dashboard/stafflist", element: <StaffList /> },
   { path: "/patient_page", element: <Patient_Page /> },
-  { path: "/dashboard/create_staff", element: <Create_Staff /> },
+  { path: "/dashboard/staff", element: <Staff /> },
   { path: "/book-appointment", element: <BookAppointmentPage /> },
   { path: "/patient-registration", element: <PatientRegistrationForm /> },
   { path: "/dashboard/suppliers", element: <Suppliers /> },
@@ -40,7 +39,6 @@ const routes = [
   { path: "/dashboard/medication-list", element: <PatientMedicationList /> },
   { path: "/dashboard/patients", element: <Patients /> },
   { path: "/requiform", element: <RequisitionForm /> },
-  { path: "/dashboard/patient-alloc", element: <Patient_Allocation /> },
   { path: "/list-patient-appointment", element: <ListOfPa /> }
 ];
 

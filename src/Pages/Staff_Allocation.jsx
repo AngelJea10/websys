@@ -179,7 +179,6 @@ export default function Staff_Allocation() {
                     <table className="table">
                       <thead>
                         <tr>
-                          <th>Week</th>
                           <th>Staff ID</th>
                           <th>Ward ID</th>
                           <th>Shift</th>
@@ -189,7 +188,6 @@ export default function Staff_Allocation() {
                       <tbody>
                         {staffAllocation.map((allocation, index) => (
                           <tr key={index}>
-                            <td>{allocation.week}</td>
                             <td>{allocation.staff_num}</td>
                             <td>{allocation.ward_id}</td>
                             <td>{allocation.shift}</td>

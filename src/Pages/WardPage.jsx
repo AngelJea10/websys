@@ -34,7 +34,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: "calc(100% - ${drawerWidth}px)",
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -168,7 +168,7 @@ export default function WardPage() {
         tel_extn: '',
       });
       setSelectedList(null);
-      setShowCreateButton(true); // Show the create button after deselection
+      setShowCreateButton(true); 
     } else {
       // Select the ward
       setSelectedList(list);
@@ -179,7 +179,7 @@ export default function WardPage() {
         num_of_beds: list.num_of_beds,
         tel_extn: list.tel_extn,
       });
-      setShowCreateButton(false); // Hide the create button when a ward is selected
+      setShowCreateButton(false); 
     }
   }
 

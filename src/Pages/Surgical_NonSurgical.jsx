@@ -41,7 +41,6 @@ const Surgical_NonSurgical = () => {
   async function handleSubmit(event) {
     event.preventDefault();
     if (selectedSupply) {
-      // Update supply
       const { data, error } = await supabase
         .from('surgical_and_non_surgical_supplies')
         .update(surgicalNonsurgical)
@@ -56,7 +55,6 @@ const Surgical_NonSurgical = () => {
         );
       }
     } else {
-      // Create new supply
       const { data, error } = await supabase
         .from('surgical_and_non_surgical_supplies')
         .insert(surgicalNonsurgical)
@@ -79,7 +77,7 @@ const Surgical_NonSurgical = () => {
       cost_per_unit: ''
     });
     setSelectedSupply(null);
-    setShowCreateButton(true); // Show the create button after form submission
+    setShowCreateButton(true); 
   }
 
   async function handleDelete(item_num) {
@@ -92,14 +90,13 @@ const Surgical_NonSurgical = () => {
       if (error) {
         console.error('Error deleting surgical and nonsurgical:', error);
       } else {
-        // Update the supplies list after successful deletion
+       
         setSurgical_and_Nonsurgical(prevSupplies => prevSupplies.filter(supply => supply.item_num !== item_num));
       }
     } catch (error) {
       console.error('Error deleting surgical and nonsurgical:', error.message);
     }
 
-    // Reset form after deletion
     setSurgicalNonsurgical({
       supplier_num: '',
       name: '',
@@ -109,12 +106,12 @@ const Surgical_NonSurgical = () => {
       cost_per_unit: ''
     });
     setSelectedSupply(null);
-    setShowCreateButton(true); // Show the create button after deletion
+    setShowCreateButton(true); 
   }
 
   function handleSelectSupply(supply) {
     if (selectedSupply && selectedSupply.item_num === supply.item_num) {
-      // If the same supply is clicked again, deselect it
+  
       setSurgicalNonsurgical({
         supplier_num: '',
         name: '',
@@ -124,12 +121,12 @@ const Surgical_NonSurgical = () => {
         cost_per_unit: ''
       });
       setSelectedSupply(null);
-      setShowCreateButton(true); // Show the create button after deselection
+      setShowCreateButton(true); 
     } else {
       // Select the supply
       setSurgicalNonsurgical(supply);
       setSelectedSupply(supply);
-      setShowCreateButton(false); // Hide the create button when a supply is selected
+      setShowCreateButton(false); 
     }
   }
 
@@ -191,7 +188,7 @@ const Surgical_NonSurgical = () => {
             variant="outlined"
             sx={{ m: 1 }}
           />
-          {showCreateButton && ( // Render create button conditionally
+          {showCreateButton && ( 
             <Button type="submit" variant="contained" color="primary" sx={{ m: 1 }}>
               Create
             </Button>

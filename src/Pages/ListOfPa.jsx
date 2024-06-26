@@ -15,13 +15,12 @@ import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { mainListItems } from '../Components/NavList';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, Alert } from '@mui/material';
 
-import supabase from '../Services/Supabase'; // Adjust the path as per your file structure
-import WaitingList from './WaitingList'; // Assuming this is correctly imported
-import PatientRegistrationForm from '../Pages/PatientRegistrationForm'; // Correct path
-import Copyright from '../Components/Copyright'; // Assuming this is correctly imported
+import supabase from '../Services/Supabase';
+import PatientRegistrationForm from '../Pages/PatientRegistrationForm';
+import { mainListItems } from '../Components/NavList';
+import Copyright from '../Components/Copyright';
 
 const drawerWidth = 290;
 
@@ -35,7 +34,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: 'calc(100% - ${drawerWidth}px)',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -72,7 +71,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#800080', // Purple color
+      main: '#800080',
     },
   },
   typography: {
@@ -87,7 +86,6 @@ const ListOfPa = () => {
   const [prefillData, setPrefillData] = useState(null);
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
-  const [waitingListRefresh, setWaitingListRefresh] = useState(false);
 
   const [formData, setFormData] = useState({
     f_name: '',
@@ -125,7 +123,7 @@ const ListOfPa = () => {
       p_clinic_num: appointment.clinic_num,
       p_exam_room: appointment.exam_room,
       p_staff_num: appointment.staff_num,
-      p_patient_type: appointment.recommended_to === 'out-patient' ? 'Out-patient' : 'In-patient',
+      p_patient_type: appointment.recommended_to === '' ? 'Out-patient' : 'In-patient',
     });
     setOpenRegistrationDialog(true);
   };
@@ -141,7 +139,6 @@ const ListOfPa = () => {
 
       console.log('Patient created successfully:', data);
 
-      // Remove the corresponding appointment from the patient_appointment table
       const { error: deleteError } = await supabase
         .from('patient_appointment')
         .delete()
@@ -152,14 +149,13 @@ const ListOfPa = () => {
         return;
       }
 
-      // Update the state to reflect the change
       const updatedListOfPa = listOfPa.filter(
         (appointment) => appointment.appointment_num !== selectedAppointment.appointment_num
       );
       setListOfPa(updatedListOfPa);
 
-      setOpenRegistrationDialog(false); // Close the dialog after successful creation
-      setAlertOpen(true); // Open success alert
+      setOpenRegistrationDialog(false);
+      setAlertOpen(true);
     } catch (error) {
       console.error('Error creating patient:', error.message || error);
     }
@@ -178,7 +174,11 @@ const ListOfPa = () => {
   };
 
   const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -246,7 +246,7 @@ const ListOfPa = () => {
                         <th>Examination Room</th>
                         <th>Staff ID</th>
                         <th>Clinic ID</th>
-                        <th>Recommended to</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -261,22 +261,15 @@ const ListOfPa = () => {
                           }
                         >
                           <td>{appointment.appointment_num}</td>
-                          <td>{appointment.date_time}</td>
+                          <td>{appointment.date_and_time}</td>
                           <td>{appointment.exam_room}</td>
                           <td>{appointment.staff_num}</td>
                           <td>{appointment.clinic_num}</td>
-                          <td>{appointment.recommended_to}</td>
+                          
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </Paper>
-              </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', border: '2px solid #800080' }}>
-                  <WaitingList refresh={waitingListRefresh} />
                 </Paper>
               </Grid>
             </Grid>
@@ -299,6 +292,7 @@ const ListOfPa = () => {
               </DialogActions>
             </Dialog>
           </Container>
+          <Copyright />
         </Box>
       </Box>
       <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>

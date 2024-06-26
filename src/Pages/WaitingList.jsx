@@ -41,7 +41,6 @@ const WaitingList = () => {
         .from('in_patient')
         .insert({
           appointment_num: selectedPatient.appointment_num,
-          // Add other necessary fields here
         });
 
       if (insertError) {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -16,15 +16,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { mainListItems } from '../Components/NavList';
-import Copyright from '../Components/Copyright';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useState } from "react";
 import supabase from '../Services/Supabase';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
+import { useNavigate } from 'react-router-dom';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Copyright from '../Components/Copyright';
 
 const drawerWidth = 290;
 
@@ -38,7 +36,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: "calc(100% - ${drawerWidth}px)",
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -75,7 +73,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#800080', 
+      main: '#800080',
     },
   },
   typography: {
@@ -83,69 +81,93 @@ const customTheme = createTheme({
   },
 });
 
-export default function BookAppointmentPage() {
-  const [open, setOpen] = React.useState(false);
+const BookAppointmentPage = () => {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [patientAppointment, setPatientAppointment] = useState({
+    staff_num: '',
+    clinic_num: '',
+    exam_room: '',
+  });
+  const [error, setError] = useState(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const [patientAppointment, setPatientAppointment] = useState({
-    staff_num: '',
-    clinic_num: '',
-    exam_room: '',
-    recommended_to: '', // Changed to string type
-  });
-
-  const [error, setError] = useState(null);
-
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setPatientAppointment(prevFormData => ({
+    setPatientAppointment((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setPatientAppointment({
+      staff_num: '',
+      clinic_num: '',
+      exam_room: '',
+    });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleSnackbarOpen = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
   };
 
   async function addPatientAppointment(event) {
     event.preventDefault();
-    setError(null); 
+    setError(null);
 
-    // Basic validation
-    if (
-      !patientAppointment.staff_num ||
-      !patientAppointment.clinic_num ||
-      !patientAppointment.exam_room ||
-      !['in-patient', 'out-patient'].includes(patientAppointment.recommended_to)
-    ) {
-      setError("Please fill in all required fields and select a valid 'Recommended to' option.");
+
+    if (!patientAppointment.staff_num || !patientAppointment.clinic_num || !patientAppointment.exam_room) {
+      setError("Please fill in all required fields.");
       return;
     }
-    
+
     const currentDateAndTime = new Date().toISOString();
-    
+
     const appointmentData = {
       staff_num: patientAppointment.staff_num,
       clinic_num: patientAppointment.clinic_num,
       exam_room: patientAppointment.exam_room,
       date_and_time: currentDateAndTime,
-      recommended_to: patientAppointment.recommended_to,
     };
 
     const { data, error } = await supabase.from('patient_appointment').insert(appointmentData);
 
     if (error) {
-      console.error("Error inserting data:", error);
-      setError(`Failed to save patient appointment details. Error: ${error.message}`);
+      console.error('Error inserting data:', error);
+      setError("Failed to save patient appointment details. Error: ${error.message}");
     } else {
-      console.log("Patient appointment added:", data);
-      alert("Appointment successfully added!");
+      console.log('Patient appointment added:', data);
+
+
+      handleSnackbarOpen('Appointment successfully booked!', 'success');
+
+
       setPatientAppointment({
         staff_num: '',
         clinic_num: '',
         exam_room: '',
-        recommended_to: '', // Reset to empty string or null based on your preference
       });
+
+      setDialogOpen(true); 
     }
   }
 
@@ -167,13 +189,7 @@ export default function BookAppointmentPage() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
               Wellmeadows Hospital
             </Typography>
             <IconButton color="inherit">
@@ -195,17 +211,13 @@ export default function BookAppointmentPage() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
-            {mainListItems}
-          </List>
+          <List component="nav">{mainListItems}</List>
         </Drawer>
         <Box
           component="main"
           sx={{
             backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+              theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
@@ -234,47 +246,42 @@ export default function BookAppointmentPage() {
                   >
                     <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                       <TextField
-                        label="Staff ID"
+                        required
+                        id="staff_num"
+                        name="staff_num"
+                        label="Staff Number"
                         variant="outlined"
-                        name='staff_num'
-                        margin="normal"
-                        sx={{ m: 1 }}
                         value={patientAppointment.staff_num}
                         onChange={handleChange}
+                        sx={{ m: 1, width: '45ch' }}
                       />
                       <TextField
-                        label="Clinic ID"
+                        required
+                        id="clinic_num"
+                        name="clinic_num"
+                        label="Clinic Number"
                         variant="outlined"
-                        name='clinic_num'
-                        margin="normal"
-                        sx={{ m: 1 }}
                         value={patientAppointment.clinic_num}
                         onChange={handleChange}
+                        sx={{ m: 1, width: '45ch' }}
                       />
                       <TextField
+                        required
+                        id="exam_room"
+                        name="exam_room"
                         label="Exam Room"
                         variant="outlined"
-                        name='exam_room'
-                        margin="normal"
-                        sx={{ m: 1 }}
                         value={patientAppointment.exam_room}
                         onChange={handleChange}
+                        sx={{ m: 1, width: '45ch' }}
                       />
-                      <FormControl sx={{ m: 1, minWidth: 180 }}>
-                        <InputLabel>Recommended to</InputLabel>
-                        <Select
-                          value={patientAppointment.recommended_to}
-                          onChange={handleChange}
-                          name="recommended_to"
-                          label="Recommended to"
-                        >
-                          <MenuItem value="in-patient">In-patient</MenuItem>
-                          <MenuItem value="out-patient">Out-patient</MenuItem>
-                        </Select>
-                      </FormControl>
                     </Box>
-                    {error && <div style={{ color: 'red' }}>{error}</div>}
-                    <Button type='submit' variant="contained" color="primary">
+                    {error && <Typography color="error" variant="body2">{error}</Typography>}
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ mt: 2, backgroundColor: '#800080', '&:hover': { backgroundColor: '#4B0082' } }}
+                    >
                       Book Appointment
                     </Button>
                   </Box>
@@ -282,9 +289,21 @@ export default function BookAppointmentPage() {
               </Grid>
             </Grid>
           </Container>
+          <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleSnackbarClose}
+              severity={snackbarSeverity}
+            >
+              {snackbarMessage}
+            </MuiAlert>
+          </Snackbar>
           <Copyright />
         </Box>
       </Box>
     </ThemeProvider>
   );
-}
+};
+
+export default BookAppointmentPage;
